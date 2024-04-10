@@ -1,5 +1,7 @@
 import pandas as pd
 from datetime import datetime, timedelta
+import pdfkit 
+import os
 
 # function to get the date range for the previous week
 def previous_week_dates(current_date):
@@ -60,24 +62,39 @@ other_items_df = pd.DataFrame(other_items)
 html_string = f"""
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         /* CSS styling */
 
         body {{
             font-family: Arial, sans-serif; /* Use Arial font as fallback */
+            display: flex;
+            flex-direction: column;
+            align-self: center;
+            margin: 0 auto; /* Center the body horizontally */
+            width: 90%; /* Set the width of the body */
         }}
 
         table {{
             border-collapse: collapse;
-            width: 50%;
+            width: 100%;
+            border: 0px solid;
         }}
         th, td {{
             padding: 8px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border: 1px solid #ddd;
         }}
         th {{
-            background-color: #f2f2f2;
+            background-color: rgba(0,0,0,0.1);
+        }}
+
+        /* Media queries for smaller screens */
+        @media screen and (min-width: 600px) {{
+            body {{
+                width: 50%; /* Adjust width for smaller screens */
+            }}
         }}
     </style>
 </head>
@@ -99,20 +116,4 @@ html_file_name = f"reports/report_{start_date.strftime("%d-%m-%Y")}_{end_date.st
 with open(html_file_name, 'w') as f:
     f.write(html_string)
 
-print("HTML report has been saved as report.html")
-
-print(f"Report for week {start_date.strftime("%d-%m-%Y")} to {end_date.strftime("%d-%m-%Y")}")
-
-print(f"\nAmount spent: ${total_amount(previous_week_df)}")
-# print category totals
-print()
-if not category_totals_df.empty:
-    print(category_totals_df.to_string(index=False))
-else:
-    print("No category records.")
-
-print("\nOther items:")
-if not other_items_df.empty:
-    print(other_items_df.to_string(index=False))
-else:
-    print("No other items.")
+print(f"\nHTML report has been saved as {html_file_name}\n")
